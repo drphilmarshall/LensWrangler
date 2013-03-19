@@ -1,7 +1,9 @@
 LensWrangler
 ============
 
-Model-based gravitational lens annotation. Example coming soon!
+Model-based gravitational lens annotation. 
+
+[Example.](http://drphilmarshall.github.com/LensWrangler/)
 
 Credits
 -------
