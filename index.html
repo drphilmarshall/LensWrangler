@@ -1,7 +1,12 @@
 <html>
 <head>
+
 	<title>Lens Wrangler</title>
-	<script src="https://raw.github.com/slowe/lensjs/master/lens.js"></script>
+	<!-- <script src="https://raw.github.com/slowe/lensjs/master/lens.js"></script>
+	<script src="https://raw.github.com/slowe/lensjs/master/canvas.js"></script>
+	<script src="https://raw.github.com/drphilmarshall/lensjs/master/lenswrangler.js"></script> -->
+	<script src="../lensjs/lens.js"></script>
+	<script src="../lensjs/canvas.js"></script>
 	<script src="lenswrangler.js"></script>
 	<script type="text/javascript" src="https://raw.github.com/jasondavies/conrec.js/master/conrec.js"></script>
 	<!--[if lt IE 9]><script src="excanvas.min.js"></script><![endif]-->
@@ -10,19 +15,18 @@
 	window.onload = function(e){ 
 
 		// Create a LensWrangler object. The ID is that of the <div>
-		var lens = new LensWrangler({id:'lenswrangler'});
+		var wrangler = new LensWrangler({id:'lenswrangler', pixscale:0.0375});
 		
-		// Attach a function to the load event
-		// lens.bind("load",function(){
-		//     document.getElementById('status').innerHTML = "Loaded "+this.src;
-		// });
-		lens.bind("load",function(){
-			document.getElementById('status').innerHTML = "Create a lens model to capture the blue arcs";
-		});
-		
-		// Load the background image:
-		lens.load("CSWA5_15x15arcsec.jpg");
+        console.log(wrangler);
 
+        // Attach a function to the load event
+		var offmsg = "Create a lens model to capture the blue arcs";
+		wrangler.bind("mouseout",function(){
+			this.setStatus(offmsg);
+		}).bind("loadimage",function(){
+			this.setStatus(offmsg);
+		});
+                
     }
 	</script>
 
@@ -35,13 +39,13 @@
 	h1, h2, h3, h4 { font-family: 'Lucida Grande','Calibri',Helvetica,Arial,sans-serif; }
 	h1 { margin-bottom: 0.5em; }
 	a { color: #5555aa; }
-	#lenstoy { border: 2px solid #606060; }
+	#lenswrangler { border: 2px solid #606060; }
 	#lensimg { border: 2px solid #606060; }
 	code { color: #5555aa; }
 	pre { color: #5555aa; }
 	#main { position: relative; height:auto; }
 	#status { margin-bottom: 0.5em; }
-	#lenstoy, #lensimg { width:400px; height:400px; }
+	#lenswrangler, #lensimg { width:400px; height:400px; }
 	#forkme_banner {
 		background: url("http://slowe.github.com/graph/images/blacktocat.png") no-repeat scroll 95% 50% #0090FF;
 		border-bottom-left-radius: 2px;
@@ -74,7 +78,7 @@
 		<br>
 		<div id="main">
 			<!-- <img src="simarc1.png" id="lensimg" style="z-index:1;position:absolute;"/> -->
-			<img id="lensimg" src="CSWA5_15x15arcsec.jpg" style="z-index:1;position:absolute;"/>
+			<img id="lensimg" src="CSWA5_15x15arcsec.jpg" style="z-index:10;position:absolute;"/>
 			<div id="lenswrangler" style="z-index:10;position:absolute;"></div>
 		</div>
 	
