@@ -2,12 +2,16 @@
 <head>
 
 	<title>Lens Wrangler</title>
-	<!-- <script src="https://raw.github.com/slowe/lensjs/master/lens.js"></script>
+    
+	<script src="https://raw.github.com/slowe/lensjs/master/lens.js"></script>
 	<script src="https://raw.github.com/slowe/lensjs/master/canvas.js"></script>
-	<script src="https://raw.github.com/drphilmarshall/lensjs/master/lenswrangler.js"></script> -->
-	<script src="../lensjs/lens.js"></script>
+	<script src="https://raw.github.com/drphilmarshall/lenswrangler/master/lenswrangler.js"></script>
+    
+	<!-- Development:
+    <script src="../lensjs/lens.js"></script>
 	<script src="../lensjs/canvas.js"></script>
-	<script src="lenswrangler.js"></script>
+	<script src="lenswrangler.js"></script> -->
+    
 	<script type="text/javascript" src="https://raw.github.com/jasondavies/conrec.js/master/conrec.js"></script>
 	<!--[if lt IE 9]><script src="excanvas.min.js"></script><![endif]-->
 	<script type="text/javascript">
@@ -17,7 +21,7 @@
 		// Create a LensWrangler object. The ID is that of the <div>
 		var wrangler = new LensWrangler({id:'lenswrangler', pixscale:0.0375});
 		
-        console.log(wrangler);
+        // console.log(wrangler);
 
         // Attach a function to the load event
 		var offmsg = "Create a lens model to capture the blue arcs";
@@ -38,11 +42,11 @@
 	}
 	h1, h2, h3, h4 { font-family: 'Lucida Grande','Calibri',Helvetica,Arial,sans-serif; }
 	h1 { margin-bottom: 0.5em; }
-	a { color: #5555aa; }
+	a { color: #999999; }
 	#lenswrangler { border: 2px solid #606060; }
 	#lensimg { border: 2px solid #606060; }
-	code { color: #5555aa; }
-	pre { color: #5555aa; }
+	code { color: #999999; }
+	pre { color: #999999; }
 	#main { position: relative; height:auto; }
 	#status { margin-bottom: 0.5em; }
 	#lenswrangler, #lensimg { width:400px; height:400px; }
@@ -64,6 +68,11 @@
 	#page {
 		margin: 20px;
 	}
+	#footer {
+		position: absolute;
+		margin: 20px;
+		top: 520px;
+	}
 	</style>
 </head>
 
@@ -77,13 +86,20 @@
 		<div id="status">Loading image...</div>
 		<br>
 		<div id="main">
-			<!-- <img src="simarc1.png" id="lensimg" style="z-index:1;position:absolute;"/> -->
 			<img id="lensimg" src="CSWA5_15x15arcsec.jpg" style="z-index:10;position:absolute;"/>
 			<div id="lenswrangler" style="z-index:10;position:absolute;"></div>
 		</div>
 	
 		<p align="left"><font size=-1><a href="https://github.com/drphilmarshall/LensWrangler">https://github.com/drphilmarshall/LensWrangler</a></p>
 	</div>
+
+    <!-- FOOTER  -->
+    <div id="footer" class="outer">
+      <footer class="inner">
+        <p class="copyright">LensWrangler maintained by <a href="https://github.com/drphilmarshall">Phil Marshall</a></p>
+        <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
 
 </body>
 </html>

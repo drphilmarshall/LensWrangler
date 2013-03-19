@@ -367,7 +367,7 @@
 		if(typeof fnCallback=="function") fnCallback(this);
 		this.trigger("init");
 	
-        console.log(this);
+        // console.log(this);
     
 		return this;
 	}
