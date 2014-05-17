@@ -66,7 +66,10 @@
       ms.rescale(0, 0, width, height);
       
       ms.on('marking-surface:change', function() {
-        console.log(ms.getValue());
+        var value = JSON.parse(ms.getValue())[0];
+        var rx = parseFloat(value.rx) * wrangler.pixscale;
+        var ry = parseFloat(value.ry) * wrangler.pixscale;
+        console.log(rx, ry);
       });
       
     }
