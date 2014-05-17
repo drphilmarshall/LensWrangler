@@ -420,8 +420,11 @@
 
 		if (this.showcrit) {
       this.modelPaper.clear();
-      this.drawContours(this.modelPaper, this.critcurve, {color:'#007700', lw:2});
-      this.drawContours(this.modelPaper, this.caustics, {color:'#007700', lw:2});
+      var critcurve = this.downsample(this.critcurve);
+      var caustics = this.downsample(this.caustics);
+      
+      this.drawContours(this.modelPaper, critcurve, {color:'#007700', lw:2});
+      this.drawContours(this.modelPaper, caustics, {color:'#007700', lw:2});
     }
         
 		// Re-calculate the lensed image
