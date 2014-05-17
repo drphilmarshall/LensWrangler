@@ -18,22 +18,22 @@
 	// First we will create the basic function
 	function LensWrangler(input){
 	
-        // Set some variables based on the inputs:
-		this.id = (input && typeof input.id=="string") ? input.id : "lenswrangler";
-		this.pixscale = (input && typeof input.pixscale=="number") ? input.pixscale : 1.0;
-        
+    // Set some variables based on the inputs:
+		this.id = (input && typeof input.id == "string") ? input.id : "lenswrangler";
+		this.pixscale = (input && typeof input.pixscale == "number") ? input.pixscale : 1.0;
+    
 		// Set up the canvas for drawing the model image etc:
 		this.paper = new Canvas({ 'id': this.id });
-        // Get the canvas width and height:
+    
+    // Get the canvas width and height:
 		this.width = this.paper.width;
 		this.height = this.paper.height;
-        
-        // Let's define some events
-        this.events = {load:"",loadimage:"",click:"",mousemove:"",mouseout:"",mouseover:"",init:""};
-		this.img = { complete: false };
-		this.showcrit = true;
-
-	
+    
+    // Let's define some events
+    this.events = {load:"",loadimage:"",click:"",mousemove:"",mouseout:"",mouseover:"",init:""};
+    this.img = { complete: false };
+    this.showcrit = true;
+	  
 		// Create an instance of a lens:
 		this.lens = new Lens({ 'width': this.width, 'height': this.height, 'pixscale': this.pixscale});
 
@@ -47,14 +47,15 @@
 		this.models = new Array();
 		this.models.push({
 			name: 'Example',
-			src: "CSWA5_15x15arcsec.jpg",
-            PSFwidth: 1.2,
+      src:" http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg",
+      // src: "CSWA5_15x15arcsec.jpg",
+      PSFwidth: 1.2,
 			components: [
-                {plane: "lens", theta_e: 1.8, x: -2.4, y: -0.7},
-			    {plane: "lens", theta_e: 1.9, x:  2.7, y:  0.2},
-			    {plane: "lens", theta_e: 0.4, x: -4.6, y:  1.7},
-			    {plane: "source", size:  0.7, x: 100.0, y:  100.0}
-            ],
+        {plane: "lens", theta_e: 1.8, x: -2.4, y: -0.7},
+        {plane: "lens", theta_e: 1.9, x:  2.7, y:  0.2},
+        {plane: "lens", theta_e: 0.4, x: -4.6, y:  1.7},
+        {plane: "source", size:  0.7, x: 100.0, y:  100.0}
+        ],
             events: {
 				mousemove: function(e){
 					var t = this.lens.pix2ang({x:e.x, y:e.y});
@@ -331,7 +332,8 @@
                         i = this.lens.altxy2i(Math.round(c[l][k].x),Math.round(c[l][k].y));                 
                         this.caustics[l][k] = {x: (Math.round(c[l][k].x - this.lens.alpha[i].x)),
                                                y: (Math.round(c[l][k].y - this.lens.alpha[i].y))};
-                        if (l == 0) console.log(c[l][k],i, this.lens.alpha[i],this.caustics[l][k]);
+                                               
+                        // if (l == 0) console.log(c[l][k],i, this.lens.alpha[i],this.caustics[l][k]);
                     }    
 		        }
                 
@@ -418,14 +420,32 @@
 			}
 			var lasso = this.getContours(pimage,[0.4]);
 			outline = lasso.contourList();
+      outline = this.downsample(outline);
+      
 			this.drawContours(outline, {color:'#00FF00', lw:4});
-        }
-
+    }
         // drawComponent("source", this.lens, c);
-
-
 	}
 	
+  // Downsample contours from a list of contours
+  LensWrangler.prototype.downsample = function(contourList) {
+    var factor = 4;
+    var downsampledList = [];
+    
+    for (var i = 0; i < contourList.length; i += 1) {
+      var contour = contourList[i];
+      var downsampled = [];
+      
+      for (var j = 0; j < contour.length; j += factor) {
+        downsampled.push(contour[j]);
+      }
+      
+      downsampledList.push(downsampled);
+    }
+    
+    return downsampledList;
+  }
+  
 	// Loads the image file. You can provide a callback or have
 	// already assigned one with .bind('load',function(){ })
 	LensWrangler.prototype.loadImage = function(source,fnCallback){

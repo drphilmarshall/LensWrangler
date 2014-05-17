@@ -1,29 +1,32 @@
-<html>
+<!DOCTYPE html>
+<meta charset="utf-8">
 <head>
 
 	<title>Lens Wrangler</title>
     
-	<script src="https://rawgithub.com/slowe/lensjs/master/lens.js"></script>
-	<script src="https://rawgithub.com/slowe/lensjs/master/canvas.js"></script>
-	<script src="https://rawgithub.com/drphilmarshall/lenswrangler/master/lenswrangler.js"></script>
+	<script type="text/javascript" src="lib/lens.js"></script>
+	<script type="text/javascript" src="lib/canvas.js"></script>
+	<script type="text/javascript" src="lenswrangler.js"></script>
     
-	<!-- Development:
-    <script src="../lensjs/lens.js"></script>
+  <!--
+  Development:
+  <script src="../lensjs/lens.js"></script>
 	<script src="../lensjs/canvas.js"></script>
-	<script src="lenswrangler.js"></script> -->
+	<script src="lenswrangler.js"></script>
+  -->
     
-	<script type="text/javascript" src="https://rawgithub.com/jasondavies/conrec.js/master/conrec.js"></script>
-	<!--[if lt IE 9]><script src="excanvas.min.js"></script><![endif]-->
+	<script type="text/javascript" src="lib/conrec.js"></script>
+	<!--[if lt IE 9]>
+    <script src="excanvas.min.js"></script>
+  <![endif]-->
 	<script type="text/javascript">
 
 	window.onload = function(e){ 
 
 		// Create a LensWrangler object. The ID is that of the <div>
 		var wrangler = new LensWrangler({id:'lenswrangler', pixscale:0.0375});
-		
-        // console.log(wrangler);
 
-        // Attach a function to the load event
+    // Attach a function to the load event
 		var offmsg = "Create a lens model to capture the blue arcs";
 		wrangler.bind("mouseout",function(){
 			this.setStatus(offmsg);
@@ -86,7 +89,7 @@
 		<div id="status">Loading image...</div>
 		<br>
 		<div id="main">
-			<img id="lensimg" src="CSWA5_15x15arcsec.jpg" style="z-index:10;position:absolute;"/>
+			<img id="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" style="z-index:10;position:absolute;"/>
 			<div id="lenswrangler" style="z-index:10;position:absolute;"></div>
 		</div>
 	
