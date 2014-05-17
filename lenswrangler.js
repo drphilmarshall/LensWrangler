@@ -16,14 +16,20 @@
 	exports.LensWrangler = LensWrangler;
 
 	// First we will create the basic function
-	function LensWrangler(input){
-	
+  function LensWrangler(obj) {
+	  
+    this.model = (obj && typeof obj.model === "string") ? obj.model : "lenswrangler-model";
+    this.prediction = (obj && typeof obj.prediction === "string") ? obj.prediction : "lenswrangler-prediction";
+    
     // Set some variables based on the inputs:
-		this.id = (input && typeof input.id == "string") ? input.id : "lenswrangler";
-		this.pixscale = (input && typeof input.pixscale == "number") ? input.pixscale : 1.0;
+    this.id = (obj && typeof obj.id == "string") ? obj.id : "lenswrangler-model";
+		this.pixscale = (obj && typeof obj.pixscale == "number") ? obj.pixscale : 1.0;
     
 		// Set up the canvas for drawing the model image etc:
 		this.paper = new Canvas({ 'id': this.id });
+    
+    this.modelPaper = new Canvas({'id': this.model});
+    this.predictionPaper = new Canvas({'id': this.prediction});
     
     // Get the canvas width and height:
 		this.width = this.paper.width;
@@ -102,18 +108,17 @@
 		return c;
 	}
 	
-	LensWrangler.prototype.drawContours = function(c, opt){
+	LensWrangler.prototype.drawContours = function(canvas, c, opt){
 		if(c.length < 1) return;
-    console.log(c);
     
 		var color = (opt && typeof opt.color==="string") ? opt.color : '#FFFFFF';
 		var lw = (opt && typeof opt.lw==="number") ? opt.lw : 1;
 		var i, j, l;
-		this.paper.ctx.strokeStyle = color;
-		this.paper.ctx.lineWidth = lw;
+		canvas.ctx.strokeStyle = color;
+		canvas.ctx.lineWidth = lw;
 		// Loop over separate contour loops, of which there are c.length:
         for(l = 0; l < c.length ; l++){
-			this.paper.ctx.beginPath();
+			canvas.ctx.beginPath();
 
 			// Move to the start of this contour:
 			// this.paper.ctx.moveTo(c[l][0].x,c[l][0].y);
@@ -124,11 +129,11 @@
 
             // Plot contours as points (actually circles):
 			for(i = 0; i < c[l].length ; i++) {
-                this.paper.ctx.arc(c[l][i].x,c[l][i].y,0.5,0.0,Math.PI*2.0,true);
+        canvas.ctx.arc(c[l][i].x,c[l][i].y,0.5,0.0,Math.PI*2.0,true);
 			}
       
-      this.paper.ctx.closePath();
-			this.paper.ctx.stroke();
+      canvas.ctx.closePath();
+			canvas.ctx.stroke();
 		}
 		
 		return this;
@@ -353,6 +358,9 @@
 	
 	
 		this.paper.clear();
+    this.modelPaper.clear();
+    this.predictionPaper.clear();
+    
 		// Take a copy of the blank <canvas>
 		this.paper.copyToClipboard();
 	
@@ -411,8 +419,9 @@
 		this.paper.pasteFromClipboard();
 
 		if (this.showcrit) {
-      this.drawContours(this.critcurve, {color:'#007700', lw:2});
-      this.drawContours(this.caustics, {color:'#007700', lw:2});
+      this.modelPaper.clear();
+      this.drawContours(this.modelPaper, this.critcurve, {color:'#007700', lw:2});
+      this.drawContours(this.modelPaper, this.caustics, {color:'#007700', lw:2});
     }
         
 		// Re-calculate the lensed image
@@ -436,7 +445,9 @@
 			var lasso = this.getContours(pimage, [0.4]);
 			outline = lasso.contourList();
       outline = this.downsample(outline);
-			this.drawContours(outline, {color:'#00FF00', lw:4});
+      
+      this.predictionPaper.clear();
+			this.drawContours(this.predictionPaper, outline, {color:'#00FF00', lw:4});
     }
 
     // drawComponent("source", this.lens, c);

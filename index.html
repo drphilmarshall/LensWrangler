@@ -26,8 +26,10 @@
 
     // Create a LensWrangler object. The ID is that of the <div>
     var wrangler = new LensWrangler({
-      id:'lenswrangler',
-      pixscale:0.0375
+      id:'lenswrangler-model',
+      model: 'lenswrangler-model',
+      prediction: 'lenswrangler-prediction',
+      pixscale: 0.0375
     });
 
     // Attach a function to the load event
@@ -66,7 +68,7 @@
   }
   
 	#status { margin-bottom: 0.5em; }
-	#lenswrangler, .lensimg {
+	#lenswrangler, #lenswrangler-model, #lenswrangler-prediction, .lensimg {
     width:400px; height:400px;
   }
   
@@ -136,17 +138,16 @@
       <!-- left panel for model -->
       <div class="inline">
         <!-- background image is always absolute positions -->
-        <img class="lensimg absolute" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />      
+        <div id="lenswrangler-model" class="absolute inline-block"></div>
         <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
       </div>
     
       <!-- right panel for prediction -->
       <div class="inline">
         <!--  lenswrangler class needs to be displayed as inline-block -->
-        <div id="lenswrangler" class="absolute inline-block"></div>
-        
+        <div id="lenswrangler-prediction" class="absolute inline-block"></div>
         <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
-    
+
       </div>
     
     </div>
