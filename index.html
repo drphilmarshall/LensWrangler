@@ -8,7 +8,7 @@
 	<script type="text/javascript" src="lib/lens.js"></script>
 	<script type="text/javascript" src="lib/canvas.js"></script>
 	<script type="text/javascript" src="lenswrangler.js"></script>
-    
+  
   <!--
   Development:
   <script src="../lensjs/lens.js"></script>
@@ -26,8 +26,8 @@
 
     // Create a LensWrangler object. The ID is that of the <div>
     var wrangler = new LensWrangler({
-      id:'lenswrangler-model',
-      model: 'lenswrangler-model',
+      id:'lenswrangler-massmodel',
+      massmodel: 'lenswrangler-massmodel',
       prediction: 'lenswrangler-prediction',
       pixscale: 0.0375
     });
@@ -39,8 +39,34 @@
 		}).bind("loadimage",function(){
 			this.setStatus(offmsg);
 		});
-                
+    
+    
+    // Using Brian C's Marking Surface library!!!
+    var ms = new MarkingSurface({
+      inputName: 'mass-model',
+      tool: MarkingSurface.EllipseTool
+    });
+    var containerEl = document.getElementById("marking-container");
+    containerEl.appendChild(ms.el);
+    
+    var img = new Image();
+    img.onload = function() {
+      var width = img.width;
+      var height = img.height;
+      
+      ms.addShape('image', {
+        'xlink:href': img.src,
+        width: width,
+        height: height
+      });
+      ms.svg.attr({
+        width: 400,
+        height: 400
+      });
+      ms.rescale(0, 0, width, height);
     }
+    img.src = "http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg";
+  }
 	</script>
 
 	<style type="text/css">
@@ -55,8 +81,13 @@
   
 	a { color: #999999; }
 	
-  #lenswrangler, .lensimg {
+  #lenswrangler, .lensimg, #marking-container {
     border: 2px solid #606060;
+  }
+  
+  #marking-container {
+    width: 400px;
+    height: 400px;
   }
 	
   code { color: #999999; }
@@ -68,7 +99,7 @@
   }
   
 	#status { margin-bottom: 0.5em; }
-	#lenswrangler, #lenswrangler-model, #lenswrangler-prediction, .lensimg {
+	#lenswrangler, #lenswrangler-massmodel, #lenswrangler-prediction, .lensimg {
     width:400px; height:400px;
   }
   
@@ -138,8 +169,9 @@
       <!-- left panel for model -->
       <div class="inline">
         <!-- background image is always absolute positions -->
-        <div id="lenswrangler-model" class="absolute inline-block"></div>
-        <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
+        <div id="marking-container" class="absolute inline-block"></div>
+        <div id="lenswrangler-massmodel" class="inline-block"></div>
+        <!-- <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" /> -->
       </div>
     
       <!-- right panel for prediction -->
@@ -147,7 +179,6 @@
         <!--  lenswrangler class needs to be displayed as inline-block -->
         <div id="lenswrangler-prediction" class="absolute inline-block"></div>
         <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
-
       </div>
     
     </div>
@@ -162,6 +193,9 @@
         <p>Published with <a href="http://pages.github.com">GitHub Pages</a></p>
       </footer>
     </div>
-
+    
+    
+    <script type="text/javascript" src="lib/marking/marking-surface.js"></script>
+    <script type="text/javascript" src="lib/marking/tools/ellipse.js"></script>
 </body>
 </html>
