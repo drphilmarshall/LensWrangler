@@ -1,30 +1,38 @@
 <!DOCTYPE html>
-<html>
+<meta charset="utf-8">
 <head>
 
 	<title>Lens Wrangler</title>
     
-	<script src="https://rawgithub.com/slowe/lensjs/master/lens.js"></script>
-	<script src="https://rawgithub.com/slowe/lensjs/master/canvas.js"></script>
-	<script src="https://rawgithub.com/drphilmarshall/lenswrangler/master/lenswrangler.js"></script>
+  <script type="text/javascript" src="lib/d3.js"></script>
+	<script type="text/javascript" src="lib/lens.js"></script>
+	<script type="text/javascript" src="lib/canvas.js"></script>
+	<script type="text/javascript" src="lenswrangler.js"></script>
     
-	<!-- Development:
-    <script src="../lensjs/lens.js"></script>
+  <!--
+  Development:
+  <script src="../lensjs/lens.js"></script>
 	<script src="../lensjs/canvas.js"></script>
-	<script src="lenswrangler.js"></script> -->
+	<script src="lenswrangler.js"></script>
+  -->
     
-	<script type="text/javascript" src="https://rawgithub.com/jasondavies/conrec.js/master/conrec.js"></script>
-	<!--[if lt IE 9]><script src="excanvas.min.js"></script><![endif]-->
+	<script type="text/javascript" src="lib/conrec.js"></script>
+	<!--[if lt IE 9]>
+    <script src="excanvas.min.js"></script>
+  <![endif]-->
 	<script type="text/javascript">
 
 	window.onload = function(e){ 
 
-		// Create a LensWrangler object. The ID is that of the <div>
-		var wrangler = new LensWrangler({id:'lenswrangler', pixscale:0.0375});
-		
-        // console.log(wrangler);
+    // Create a LensWrangler object. The ID is that of the <div>
+    var wrangler = new LensWrangler({
+      id:'lenswrangler-model',
+      model: 'lenswrangler-model',
+      prediction: 'lenswrangler-prediction',
+      pixscale: 0.0375
+    });
 
-        // Attach a function to the load event
+    // Attach a function to the load event
 		var offmsg = "Create a lens model to capture the blue arcs";
 		wrangler.bind("mouseout",function(){
 			this.setStatus(offmsg);
@@ -41,16 +49,29 @@
 		background-color: black;
 		color: white;
 	}
+  
 	h1, h2, h3, h4 { font-family: 'Lucida Grande','Calibri',Helvetica,Arial,sans-serif; }
 	h1 { margin-bottom: 0.5em; }
+  
 	a { color: #999999; }
-	#lenswrangler { border: 2px solid #606060; }
-	#lensimg { border: 2px solid #606060; }
-	code { color: #999999; }
+	
+  #lenswrangler, .lensimg {
+    border: 2px solid #606060;
+  }
+	
+  code { color: #999999; }
 	pre { color: #999999; }
-	#main { position: relative; height:auto; }
+	
+  #main {
+    position: relative;
+    height:auto;
+  }
+  
 	#status { margin-bottom: 0.5em; }
-	#lenswrangler, #lensimg { width:400px; height:400px; }
+	#lenswrangler, #lenswrangler-model, #lenswrangler-prediction, .lensimg {
+    width:400px; height:400px;
+  }
+  
 	#forkme_banner {
 		background: url("http://slowe.github.com/graph/images/blacktocat.png") no-repeat scroll 95% 50% #0090FF;
 		border-bottom-left-radius: 2px;
@@ -66,14 +87,39 @@
 		z-index: 10;
 		text-decoration: none;
 	}
+  
 	#page {
 		margin: 20px;
 	}
+  
+  .viewer {
+    display: block;
+  }
+  
+  .inline {
+    position: relative;
+    display: inline;
+  }
+  .inline:last-of-type {
+    margin-left: 10px;
+  }
+  
+  .inline-block {
+    display: inline-block;
+  }
+  
+  .absolute {
+    position: absolute;
+  }
+  
 	#footer {
 		position: absolute;
 		margin: 20px;
 		top: 520px;
 	}
+  
+  
+  
 	</style>
 </head>
 
@@ -86,12 +132,27 @@
 	
 		<div id="status">Loading image...</div>
 		<br>
-		<div id="main">
-			<img id="lensimg" src="CSWA5_15x15arcsec.jpg" style="z-index:10;position:absolute;"/>
-			<div id="lenswrangler" style="z-index:10;position:absolute;"></div>
-		</div>
-	
-		<p align="left"><font size=-1><a href="https://github.com/drphilmarshall/LensWrangler">https://github.com/drphilmarshall/LensWrangler</a></p>
+    
+    <div class="viewer">
+    
+      <!-- left panel for model -->
+      <div class="inline">
+        <!-- background image is always absolute positions -->
+        <div id="lenswrangler-model" class="absolute inline-block"></div>
+        <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
+      </div>
+    
+      <!-- right panel for prediction -->
+      <div class="inline">
+        <!--  lenswrangler class needs to be displayed as inline-block -->
+        <div id="lenswrangler-prediction" class="absolute inline-block"></div>
+        <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
+
+      </div>
+    
+    </div>
+    
+    <p align="left"><a href="https://github.com/drphilmarshall/LensWrangler">https://github.com/drphilmarshall/LensWrangler</a></p>
 	</div>
 
     <!-- FOOTER  -->
@@ -103,4 +164,3 @@
     </div>
 
 </body>
-</html>
