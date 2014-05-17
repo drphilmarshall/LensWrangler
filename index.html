@@ -26,8 +26,8 @@
 
     // Create a LensWrangler object. The ID is that of the <div>
     var wrangler = new LensWrangler({
-      id:'lenswrangler-massmodel',
-      massmodel: 'lenswrangler-massmodel',
+      id:'lenswrangler-srcmodel',
+      srcmodel: 'lenswrangler-srcmodel',
       prediction: 'lenswrangler-prediction',
       pixscale: 0.0375
     });
@@ -64,6 +64,11 @@
         height: 400
       });
       ms.rescale(0, 0, width, height);
+      
+      ms.on('marking-surface:change', function() {
+        console.log(ms.getValue());
+      });
+      
     }
     img.src = "http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg";
   }
@@ -99,7 +104,7 @@
   }
   
 	#status { margin-bottom: 0.5em; }
-	#lenswrangler, #lenswrangler-massmodel, #lenswrangler-prediction, .lensimg {
+	#lenswrangler, #lenswrangler-srcmodel, #lenswrangler-prediction, .lensimg {
     width:400px; height:400px;
   }
   
@@ -130,8 +135,6 @@
   .inline {
     position: relative;
     display: inline;
-  }
-  .inline:last-of-type {
     margin-left: 10px;
   }
   
@@ -165,15 +168,19 @@
 		<br>
     
     <div class="viewer">
-    
+      
       <!-- left panel for model -->
+      <!-- TODO: 1 pixel offset along y. STUPID. -->
       <div class="inline">
         <!-- background image is always absolute positions -->
-        <div id="lenswrangler-massmodel" class="absolute inline-block"></div>
-        <!-- <div id="marking-container" class="inline-block"></div> -->
+        <div id="marking-container" class="inline-block"></div>
+      </div>
+      
+      <div class="inline">
+        <div id="lenswrangler-srcmodel" class="absolute inline-block"></div>
         <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
       </div>
-    
+          
       <!-- right panel for prediction -->
       <div class="inline">
         <!--  lenswrangler class needs to be displayed as inline-block -->
