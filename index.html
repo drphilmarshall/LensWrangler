@@ -43,16 +43,25 @@
 		background-color: black;
 		color: white;
 	}
+  
 	h1, h2, h3, h4 { font-family: 'Lucida Grande','Calibri',Helvetica,Arial,sans-serif; }
 	h1 { margin-bottom: 0.5em; }
+  
 	a { color: #999999; }
-	#lenswrangler { border: 2px solid #606060; }
-	#lensimg { border: 2px solid #606060; }
-	code { color: #999999; }
+	
+  #lenswrangler { border: 2px solid #606060; }
+	.lensimg { border: 2px solid #606060; }
+	
+  code { color: #999999; }
 	pre { color: #999999; }
-	#main { position: relative; height:auto; }
+	
+  #main {
+    position: relative;
+    height:auto;
+  }
+  
 	#status { margin-bottom: 0.5em; }
-	#lenswrangler, #lensimg { width:400px; height:400px; }
+	#lenswrangler, .lensimg { width:400px; height:400px; }
 	#forkme_banner {
 		background: url("http://slowe.github.com/graph/images/blacktocat.png") no-repeat scroll 95% 50% #0090FF;
 		border-bottom-left-radius: 2px;
@@ -71,6 +80,19 @@
 	#page {
 		margin: 20px;
 	}
+  
+  .viewer {
+    display: block;
+  }
+  
+  .model, .prediction {
+    display: inline-block;
+  }
+  
+  .prediction-image {
+    position: absolute;
+  }
+  
 	#footer {
 		position: absolute;
 		margin: 20px;
@@ -88,12 +110,26 @@
 	
 		<div id="status">Loading image...</div>
 		<br>
-		<div id="main">
-			<img id="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" style="z-index:10;position:absolute;"/>
-			<div id="lenswrangler" style="z-index:10;position:absolute;"></div>
-		</div>
-	
-		<p align="left"><font size=-1><a href="https://github.com/drphilmarshall/LensWrangler">https://github.com/drphilmarshall/LensWrangler</a></p>
+    
+    <div class="viewer">
+      
+      <div class="model">
+        <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
+      </div>
+      
+      <div class="prediction">
+        <img class="lensimg prediction-image" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
+        <div id="lenswrangler" class="prediction-image"></div>
+      </div>
+      
+    </div>
+    
+<!--     <div id="main">
+      <img id="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" style="z-index:10;position:absolute;"/>
+      <div id="lenswrangler" style="z-index:10;position:absolute;"></div>
+    </div>
+     -->
+		<p align="left"><a href="https://github.com/drphilmarshall/LensWrangler">https://github.com/drphilmarshall/LensWrangler</a></p>
 	</div>
 
     <!-- FOOTER  -->
