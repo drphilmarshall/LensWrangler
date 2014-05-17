@@ -4,6 +4,7 @@
 
 	<title>Lens Wrangler</title>
     
+  <script type="text/javascript" src="lib/d3.js"></script>
 	<script type="text/javascript" src="lib/lens.js"></script>
 	<script type="text/javascript" src="lib/canvas.js"></script>
 	<script type="text/javascript" src="lenswrangler.js"></script>
@@ -23,8 +24,11 @@
 
 	window.onload = function(e){ 
 
-		// Create a LensWrangler object. The ID is that of the <div>
-		var wrangler = new LensWrangler({id:'lenswrangler', pixscale:0.0375});
+    // Create a LensWrangler object. The ID is that of the <div>
+    var wrangler = new LensWrangler({
+      id:'lenswrangler',
+      pixscale:0.0375
+    });
 
     // Attach a function to the load event
 		var offmsg = "Create a lens model to capture the blue arcs";
@@ -49,8 +53,9 @@
   
 	a { color: #999999; }
 	
-  #lenswrangler { border: 2px solid #606060; }
-	.lensimg { border: 2px solid #606060; }
+  #lenswrangler, .lensimg {
+    border: 2px solid #606060;
+  }
 	
   code { color: #999999; }
 	pre { color: #999999; }
@@ -61,7 +66,10 @@
   }
   
 	#status { margin-bottom: 0.5em; }
-	#lenswrangler, .lensimg { width:400px; height:400px; }
+	#lenswrangler, .lensimg {
+    width:400px; height:400px;
+  }
+  
 	#forkme_banner {
 		background: url("http://slowe.github.com/graph/images/blacktocat.png") no-repeat scroll 95% 50% #0090FF;
 		border-bottom-left-radius: 2px;
@@ -77,6 +85,7 @@
 		z-index: 10;
 		text-decoration: none;
 	}
+  
 	#page {
 		margin: 20px;
 	}
@@ -85,11 +94,19 @@
     display: block;
   }
   
-  .model, .prediction {
+  .inline {
+    position: relative;
+    display: inline;
+  }
+  .inline:last-of-type {
+    margin-left: 10px;
+  }
+  
+  .inline-block {
     display: inline-block;
   }
   
-  .prediction-image {
+  .absolute {
     position: absolute;
   }
   
@@ -98,6 +115,9 @@
 		margin: 20px;
 		top: 520px;
 	}
+  
+  
+  
 	</style>
 </head>
 
@@ -112,24 +132,26 @@
 		<br>
     
     <div class="viewer">
-      
-      <div class="model">
+    
+      <!-- left panel for model -->
+      <div class="inline">
+        <!-- background image is always absolute positions -->
+        <img class="lensimg absolute" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />      
         <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
       </div>
-      
-      <div class="prediction">
-        <img class="lensimg prediction-image" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
-        <div id="lenswrangler" class="prediction-image"></div>
+    
+      <!-- right panel for prediction -->
+      <div class="inline">
+        <!--  lenswrangler class needs to be displayed as inline-block -->
+        <div id="lenswrangler" class="absolute inline-block"></div>
+        
+        <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
+    
       </div>
-      
+    
     </div>
     
-<!--     <div id="main">
-      <img id="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" style="z-index:10;position:absolute;"/>
-      <div id="lenswrangler" style="z-index:10;position:absolute;"></div>
-    </div>
-     -->
-		<p align="left"><a href="https://github.com/drphilmarshall/LensWrangler">https://github.com/drphilmarshall/LensWrangler</a></p>
+    <p align="left"><a href="https://github.com/drphilmarshall/LensWrangler">https://github.com/drphilmarshall/LensWrangler</a></p>
 	</div>
 
     <!-- FOOTER  -->

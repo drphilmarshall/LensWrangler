@@ -40,9 +40,9 @@
 		// Setup our buttons etc
 		this.setup();
 	
-        // The possible lens models!
-        // NB. It would be good to be able to define the PSFwidth here, and pass it down to the 
-        // canvas routines so that the PSF blurring is well-emulated.
+    // The possible lens models!
+    // NB. It would be good to be able to define the PSFwidth here, and pass it down to the 
+    // canvas routines so that the PSF blurring is well-emulated.
  
 		this.models = new Array();
 		this.models.push({
@@ -59,7 +59,7 @@
             events: {
 				mousemove: function(e){
 					var t = this.lens.pix2ang({x:e.x, y:e.y});
-                    var msg = "Cursor position = "+(t.x.toFixed(1))+","+(t.y.toFixed(1));
+          var msg = "Cursor position = "+(t.x.toFixed(1))+","+(t.y.toFixed(1));
 					this.setStatus(msg);
 				}
             }
@@ -102,8 +102,10 @@
 		return c;
 	}
 	
-	LensWrangler.prototype.drawContours = function(c,opt){
+	LensWrangler.prototype.drawContours = function(c, opt){
 		if(c.length < 1) return;
+    console.log(c);
+    
 		var color = (opt && typeof opt.color==="string") ? opt.color : '#FFFFFF';
 		var lw = (opt && typeof opt.lw==="number") ? opt.lw : 1;
 		var i, j, l;
@@ -124,7 +126,8 @@
 			for(i = 0; i < c[l].length ; i++) {
                 this.paper.ctx.arc(c[l][i].x,c[l][i].y,0.5,0.0,Math.PI*2.0,true);
 			}
-            this.paper.ctx.closePath();
+      
+      this.paper.ctx.closePath();
 			this.paper.ctx.stroke();
 		}
 		
@@ -251,9 +254,12 @@
 				_obj.update();
 			});
 		}
-		addEvent(this.paper.canvas,"mousemove",function(e){
-			var c = _obj.paper.getCursor(e);
-			_obj.trigger("mousemove",{x:c.x,y:c.y})
+		addEvent(this.paper.canvas, "mousemove", function(e){
+      // var c = _obj.paper.getCursor(e);
+      
+      // paper.getCursor is not calculating the canvas pixel correctly
+      // using offsetX/Y instead.
+			_obj.trigger("mousemove",{x: e.offsetX, y: e.offsetY})
 		});
 		addEvent(this.paper.canvas,"mouseout",function(e){
 			_obj.trigger("mouseout")
@@ -356,12 +362,15 @@
 			if(this.model.events[e[i]] && typeof this.model.events[e[i]]==="function") ev = this.model.events[e[i]];
 			else ev = "";
 
-			if(typeof ev==="function"){
+			if (typeof ev === "function") {
 				// Zap any existing events
 				this.events[e[i]] = "";
 				this.paper.events[e[i]] = "";
-
-				if(e[i] == "mousemove") this.paper.bind(e[i],{ev:ev,wrangler:this},function(e){ e.data.wrangler.update(e); });
+				if (e[i] == "mousemove") {
+          this.paper.bind(e[i], { ev:ev, wrangler:this }, function(e) {
+            e.data.wrangler.update(e);
+          });
+        }
 				this.bind(e[i],ev);
 			}
 		}
@@ -375,7 +384,7 @@
 	}
 	
 	LensWrangler.prototype.update = function(e){
-
+    
 		// Get the size of the existing source
 		var src = this.lens.source[0];
 
@@ -391,15 +400,15 @@
 		src.y = coords.y;
 		
 		// Add the source back
-        this.lens.add(src);
-
+    this.lens.add(src);
+    
 		// Paste original image
 		this.paper.pasteFromClipboard();
 
 		if (this.showcrit) {
-            this.drawContours(this.critcurve, {color:'#007700', lw:2});
-            this.drawContours(this.caustics, {color:'#007700', lw:2});
-        }
+      this.drawContours(this.critcurve, {color:'#007700', lw:2});
+      this.drawContours(this.caustics, {color:'#007700', lw:2});
+    }
         
 		// Re-calculate the lensed image
 		this.lens.calculateImage();
@@ -407,7 +416,7 @@
 		// Draw the lens image to the canvas
 		// this.drawComponent("image");
  
-        // Calculate and overlay arcs outline:
+    // Calculate and overlay arcs outline:
 		if(typeof Conrec==="function"){
 			var i, row, col;
 			var pimage = new Array(this.lens.h);
@@ -418,13 +427,16 @@
 					pimage[row][col] = this.lens.predictedimage[i];
 				}
 			}
-			var lasso = this.getContours(pimage,[0.4]);
+      
+			var lasso = this.getContours(pimage, [0.4]);
 			outline = lasso.contourList();
       outline = this.downsample(outline);
-      
 			this.drawContours(outline, {color:'#00FF00', lw:4});
     }
-        // drawComponent("source", this.lens, c);
+
+    // drawComponent("source", this.lens, c);
+
+
 	}
 	
   // Downsample contours from a list of contours
