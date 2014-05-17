@@ -422,13 +422,14 @@
     
 		// Paste original image
 		this.paper.pasteFromClipboard();
-
+    this.predictionPaper.clear();
+    
 		if (this.showcrit) {
       this.modelPaper.clear();
       var critcurve = this.downsample(this.critcurve);
       var caustics = this.downsample(this.caustics);
       
-      this.drawContours(this.modelPaper, critcurve, {color:'#007700', lw:2});
+      this.drawContours(this.predictionPaper, critcurve, {color:'#007700', lw:2});
       this.drawContours(this.modelPaper, caustics, {color:'#007700', lw:2});
     }
         
@@ -454,7 +455,6 @@
 			outline = lasso.contourList();
       outline = this.downsample(outline);
       
-      this.predictionPaper.clear();
 			this.drawContours(this.predictionPaper, outline, {color:'#00FF00', lw:4});
     }
 
