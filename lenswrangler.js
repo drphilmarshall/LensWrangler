@@ -18,7 +18,7 @@
 	// First we will create the basic function
   function LensWrangler(obj) {
 	  
-    this.model = (obj && typeof obj.model === "string") ? obj.model : "lenswrangler-model";
+    this.massmodel = (obj && typeof obj.massmodel === "string") ? obj.massmodel : "lenswrangler-model";
     this.prediction = (obj && typeof obj.prediction === "string") ? obj.prediction : "lenswrangler-prediction";
     
     // Set some variables based on the inputs:
@@ -28,12 +28,12 @@
 		// Set up the canvas for drawing the model image etc:
 		this.paper = new Canvas({ 'id': this.id });
     
-    this.modelPaper = new Canvas({'id': this.model});
+    this.modelPaper = new Canvas({'id': this.massmodel});
     this.predictionPaper = new Canvas({'id': this.prediction});
     
     // Get the canvas width and height:
-		this.width = this.paper.width;
-		this.height = this.paper.height;
+		this.width = this.predictionPaper.width;
+		this.height = this.predictionPaper.height;
     
     // Let's define some events
     this.events = {load:"",loadimage:"",click:"",mousemove:"",mouseout:"",mouseover:"",init:""};
@@ -277,7 +277,12 @@
 	}
 	
   LensWrangler.prototype.initModelUI = function() {
-    console.log(this.paper);
+    console.log('initModelUI');
+    
+    var modelsvg = d3.select("#" + this.massmodel).append('svg');
+    console.log(modelsvg);
+    
+    
   }
   
 	// Return a model by name
@@ -417,13 +422,14 @@
     
 		// Paste original image
 		this.paper.pasteFromClipboard();
-
+    this.predictionPaper.clear();
+    
 		if (this.showcrit) {
       this.modelPaper.clear();
       var critcurve = this.downsample(this.critcurve);
       var caustics = this.downsample(this.caustics);
       
-      this.drawContours(this.modelPaper, critcurve, {color:'#007700', lw:2});
+      this.drawContours(this.predictionPaper, critcurve, {color:'#007700', lw:2});
       this.drawContours(this.modelPaper, caustics, {color:'#007700', lw:2});
     }
         
@@ -449,7 +455,6 @@
 			outline = lasso.contourList();
       outline = this.downsample(outline);
       
-      this.predictionPaper.clear();
 			this.drawContours(this.predictionPaper, outline, {color:'#00FF00', lw:4});
     }
 
