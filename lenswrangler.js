@@ -259,7 +259,7 @@
       
       // paper.getCursor is not calculating the canvas pixel correctly
       // using offsetX/Y instead.
-			_obj.trigger("mousemove",{x: e.offsetX, y: e.offsetY})
+			_obj.trigger("mousemove",{x: e.layerX, y: e.layerY})
 		});
 		addEvent(this.paper.canvas,"mouseout",function(e){
 			_obj.trigger("mouseout")
@@ -271,9 +271,13 @@
 		return this;
 	}
 	
+  LensWrangler.prototype.initModelUI = function() {
+    console.log(this.paper);
+  }
+  
 	// Return a model by name
 	LensWrangler.prototype.getModel = function(name){
-		if(typeof name==="string"){
+		if(typeof name === "string"){
 			for(var i = 0; i < this.models.length; i++){
 				if(this.models[i].name==name) return this.models[i];
 			}
@@ -286,9 +290,9 @@
 	
 		this.model = this.getModel(inp);
 		
-		if(typeof this.model.src==="string") this.loadImage(this.model.src);
+		if(typeof this.model.src === "string") this.loadImage(this.model.src);
 	
-		if(typeof this.model.components==="object"){
+		if(typeof this.model.components === "object"){
 			this.lens.removeAll('lens');
 			this.lens.removeAll('source');
 			for(var i = 0; i < this.model.components.length ; i++){
@@ -302,6 +306,7 @@
 			// Now use this to calculate the lensed image:
 			this.lens.calculateImage();
 
+      this.initModelUI();
 	
 			// If we have the Conrec object available we can plot the critical 
 			// curve, and an outline of the lensed image:
@@ -417,7 +422,7 @@
 		// this.drawComponent("image");
  
     // Calculate and overlay arcs outline:
-		if(typeof Conrec==="function"){
+		if(typeof Conrec === "function"){
 			var i, row, col;
 			var pimage = new Array(this.lens.h);
 			for(row = 0 ; row < this.lens.h ; row++){
@@ -460,7 +465,7 @@
   
 	// Loads the image file. You can provide a callback or have
 	// already assigned one with .bind('load',function(){ })
-	LensWrangler.prototype.loadImage = function(source,fnCallback){
+	LensWrangler.prototype.loadImage = function(source, fnCallback){
 	
 		var src = "";
 	
