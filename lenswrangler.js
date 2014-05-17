@@ -18,7 +18,7 @@
 	// First we will create the basic function
   function LensWrangler(obj) {
 	  
-    this.massmodel = (obj && typeof obj.massmodel === "string") ? obj.massmodel : "lenswrangler-model";
+    this.srcmodel = (obj && typeof obj.srcmodel === "string") ? obj.srcmodel : "lenswrangler-srcmodel";
     this.prediction = (obj && typeof obj.prediction === "string") ? obj.prediction : "lenswrangler-prediction";
     
     // Set some variables based on the inputs:
@@ -28,7 +28,7 @@
 		// Set up the canvas for drawing the model image etc:
 		this.paper = new Canvas({ 'id': this.id });
     
-    this.modelPaper = new Canvas({'id': this.massmodel});
+    this.srcmodelPaper = new Canvas({'id': this.srcmodel});
     this.predictionPaper = new Canvas({'id': this.prediction});
     
     // Get the canvas width and height:
@@ -50,25 +50,18 @@
     // NB. It would be good to be able to define the PSFwidth here, and pass it down to the 
     // canvas routines so that the PSF blurring is well-emulated.
  
-		this.models = new Array();
+		this.models = [];
 		this.models.push({
 			name: 'Example',
       src:" http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg",
       // src: "CSWA5_15x15arcsec.jpg",
       PSFwidth: 1.2,
-			components: [
+      components: [
         {plane: "lens", theta_e: 1.8, x: -2.4, y: -0.7},
         {plane: "lens", theta_e: 1.9, x:  2.7, y:  0.2},
         {plane: "lens", theta_e: 0.4, x: -4.6, y:  1.7},
         {plane: "source", size:  0.7, x: 100.0, y:  100.0}
-        ],
-            events: {
-				mousemove: function(e){
-					var t = this.lens.pix2ang({x:e.x, y:e.y});
-          var msg = "Cursor position = "+(t.x.toFixed(1))+","+(t.y.toFixed(1));
-					this.setStatus(msg);
-				}
-            }
+      ]
 		});
 	
 	
@@ -275,15 +268,6 @@
 	
 		return this;
 	}
-	
-  LensWrangler.prototype.initModelUI = function() {
-    console.log('initModelUI');
-    
-    var modelsvg = d3.select("#" + this.massmodel).append('svg');
-    console.log(modelsvg);
-    
-    
-  }
   
 	// Return a model by name
 	LensWrangler.prototype.getModel = function(name){
@@ -315,8 +299,6 @@
 	
 			// Now use this to calculate the lensed image:
 			this.lens.calculateImage();
-
-      this.initModelUI();
 	
 			// If we have the Conrec object available we can plot the critical 
 			// curve, and an outline of the lensed image:
@@ -363,7 +345,7 @@
 	
 	
 		this.paper.clear();
-    this.modelPaper.clear();
+    this.srcmodelPaper.clear();
     this.predictionPaper.clear();
     
 		// Take a copy of the blank <canvas>
@@ -376,22 +358,14 @@
 		var e = ["mousemove","mouseover","mouseout"];
 		var ev = "";
 		for(var i = 0; i < e.length; i++){
-
-			if(this.model.events[e[i]] && typeof this.model.events[e[i]]==="function") ev = this.model.events[e[i]];
-			else ev = "";
-
-			if (typeof ev === "function") {
-				// Zap any existing events
-				this.events[e[i]] = "";
-				this.paper.events[e[i]] = "";
-				if (e[i] == "mousemove") {
-          this.paper.bind(e[i], { ev:ev, wrangler:this }, function(e) {
-            e.data.wrangler.update(e);
-          });
-        }
-				this.bind(e[i],ev);
-			}
-		}
+      
+      this.paper.events[e[i]] = "";
+      if (e[i] === "mousemove") {
+        this.srcmodelPaper.bind(e[i], { ev:ev, wrangler:this }, function(e) {
+          e.data.wrangler.update(e);
+        });
+      }
+    }
 	
 		if(typeof fnCallback=="function") fnCallback(this);
 		this.trigger("init");
@@ -425,12 +399,12 @@
     this.predictionPaper.clear();
     
 		if (this.showcrit) {
-      this.modelPaper.clear();
+      this.srcmodelPaper.clear();
       var critcurve = this.downsample(this.critcurve);
       var caustics = this.downsample(this.caustics);
       
       this.drawContours(this.predictionPaper, critcurve, {color:'#007700', lw:2});
-      this.drawContours(this.modelPaper, caustics, {color:'#007700', lw:2});
+      this.drawContours(this.srcmodelPaper, caustics, {color:'#007700', lw:2});
     }
         
 		// Re-calculate the lensed image
