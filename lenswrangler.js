@@ -427,8 +427,8 @@
       var critcurve = this.downsample(this.critcurve);
       var caustics = this.downsample(this.caustics);
       
-      this.drawContours(this.predictionPaper, critcurve, {color:'#007700', lw:2});
-      this.drawContours(this.srcmodelPaper, caustics, {color:'#007700', lw:2});
+      this.drawContours(this.predictionPaper, critcurve, {color:'#FF0000', lw:2});
+      this.drawContours(this.srcmodelPaper, caustics, {color:'#FF0000', lw:2});
     }
         
 		// Re-calculate the lensed and true images
