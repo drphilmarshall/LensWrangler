@@ -63,10 +63,7 @@
         y:  100.0
       },
       components: [
-        {plane: "source", size:  0.7, x: 100.0, y:  100.0},
-        {plane: "lens", theta_e: 1.8, x: -2.4, y: -0.7},
-        {plane: "lens", theta_e: 1.9, x:  2.7, y:  0.2},
-        {plane: "lens", theta_e: 0.4, x: -4.6, y:  1.7}
+        {plane: "source", size:  0.7, x: 100.0, y:  100.0}
       ]
 		});
 	
@@ -372,10 +369,6 @@
 		// Bind the callback events
 		var e = ["mousemove","mouseover","mouseout"];
 		var ev = "";
-    
-    console.log('number of events', this.srcmodelPaper.events["mousemove"].length);
-    console.log('number of events', this.predictionPaper.events["mousemove"].length);
-    console.log('number of events', this.paper.events["mousemove"].length);
     
 		for(var i = 0; i < e.length; i++){
       
