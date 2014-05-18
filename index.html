@@ -4,7 +4,7 @@
 
 	<title>Lens Wrangler</title>
     
-  <script type="text/javascript" src="lib/d3.js"></script>
+  <script type="text/javascript" src="lib/underscore.js"></script>
 	<script type="text/javascript" src="lib/lens.js"></script>
 	<script type="text/javascript" src="lib/canvas.js"></script>
 	<script type="text/javascript" src="lenswrangler.js"></script>
@@ -77,8 +77,8 @@
         return wrangler.lens.pix2ang({x: scaleX * d.x, y: scaleY * d.y});
       }
       
-      ms.on('marking-surface:change', function() {
-        
+      
+      function updateModel() {
         var data = JSON.parse(ms.getValue());
         var components = data.map(function(d) {
           var coords = getCoords(d);
@@ -92,8 +92,10 @@
         });
         
         wrangler.updateModel(components);
-      });
+      }
       
+      var debouncedUpdateModel = _.debounce(updateModel, 200);
+      ms.on('marking-surface:change', debouncedUpdateModel);
     }
     img.src = "http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg";
   }
