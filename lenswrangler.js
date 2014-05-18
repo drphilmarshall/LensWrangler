@@ -29,6 +29,12 @@
 		this.paper = new Canvas({ 'id': this.id });
     
     this.srcmodelPaper = new Canvas({'id': this.srcmodel});
+    this.freezeSrcModel = false;
+    var _this = this;
+    this.srcmodelPaper.canvas.onclick = function() {
+      _this.freezeSrcModel = _this.freezeSrcModel ? false: true;
+    };
+    
     this.predictionPaper = new Canvas({'id': this.prediction});
     
     // Get the canvas width and height:
@@ -79,6 +85,7 @@
     var source = this.models[0].source;
     components.splice(0, 0, source);
     this.models[0].components = components;
+    
     this.init();
   }
   
@@ -123,7 +130,7 @@
 		canvas.ctx.strokeStyle = color;
 		canvas.ctx.lineWidth = lw;
 		// Loop over separate contour loops, of which there are c.length:
-        for(l = 0; l < c.length ; l++){
+    for(l = 0; l < c.length ; l++){
 			canvas.ctx.beginPath();
 
 			// Move to the start of this contour:
@@ -336,21 +343,21 @@
 				var contours = this.getContours(invmag,[0.0]);
 				this.critcurve = contours.contourList();
                 
-                // Caustics:
-                this.caustics = new Array(this.critcurve.length);
-		        // Loop over separate loops of the critcurve contour, of which there are c.length:
-                var c = this.critcurve;
-                for(l = 0; l < c.length ; l++){
-                    this.caustics[l] = new Array(this.critcurve[l].length);
-			        // Loop over all the points in this contour, mapping them back to the source plane:
-			        for(k = 0; k < c[l].length ; k++) {
-                        i = this.lens.altxy2i(Math.round(c[l][k].x),Math.round(c[l][k].y));                 
-                        this.caustics[l][k] = {x: (Math.round(c[l][k].x - this.lens.alpha[i].x)),
-                                               y: (Math.round(c[l][k].y - this.lens.alpha[i].y))};
+        // Caustics:
+        this.caustics = new Array(this.critcurve.length);
+		    // Loop over separate loops of the critcurve contour, of which there are c.length:
+        var c = this.critcurve;
+        for(l = 0; l < c.length ; l++){
+          this.caustics[l] = new Array(this.critcurve[l].length);
+			    // Loop over all the points in this contour, mapping them back to the source plane:
+			    for(k = 0; k < c[l].length ; k++) {
+            i = this.lens.altxy2i(Math.round(c[l][k].x),Math.round(c[l][k].y));                 
+            this.caustics[l][k] = {x: (Math.round(c[l][k].x - this.lens.alpha[i].x)),
+                                   y: (Math.round(c[l][k].y - this.lens.alpha[i].y))};
                                                
-                        // if (l == 0) console.log(c[l][k],i, this.lens.alpha[i],this.caustics[l][k]);
-                    }    
-		        }
+            // if (l == 0) console.log(c[l][k],i, this.lens.alpha[i],this.caustics[l][k]);
+          }    
+		    }
                 
 			}
 		}
@@ -374,8 +381,12 @@
       
       this.paper.events[e[i]] = "";
       if (e[i] === "mousemove") {
+        var _this = this;
         this.srcmodelPaper.bind(e[i], { ev:ev, wrangler:this }, function(e) {
-          e.data.wrangler.update(e);
+          _this.e = {x:e.x, y:e.y};
+          if (!_this.freezeSrcModel) {
+            e.data.wrangler.update(e);
+          }
         });
       }
     }
@@ -389,14 +400,14 @@
 	}
 	
 	LensWrangler.prototype.update = function(e){
+    if (!e) { return; }
     
 		// Get the size of the existing source
 		var src = this.lens.source[0];
 
 		// Remove existing sources
 		this.lens.removeAll('source');
-	
-		if(!e) e = { x : 1000, y: 1000 }
+	  
 		// Set the lens source to the current cursor position, transforming pixel coords to angular coords:
 		var coords = this.lens.pix2ang({x:e.x, y:e.y});
     
@@ -407,25 +418,44 @@
 		// Add the source back
     this.lens.add(src);
     
-		// Paste original image
-		this.paper.pasteFromClipboard();
+    // Paste original image
+    this.paper.pasteFromClipboard();
     this.predictionPaper.clear();
     
-		if (this.showcrit) {
+    if (this.showcrit) {
       this.srcmodelPaper.clear();
       var critcurve = this.downsample(this.critcurve);
       var caustics = this.downsample(this.caustics);
       
-      this.drawContours(this.predictionPaper, critcurve, {color:'#007700', lw:2});
-      this.drawContours(this.srcmodelPaper, caustics, {color:'#007700', lw:2});
+      this.drawContours(this.predictionPaper, critcurve, {color:'#FF0000', lw:2});
+      this.drawContours(this.srcmodelPaper, caustics, {color:'#FF0000', lw:2});
     }
         
-		// Re-calculate the lensed image
+		// Re-calculate the lensed and true images
 		this.lens.calculateImage();
+		this.lens.calculateTrueImage();
 	
 		// Draw the lens image to the canvas
 		// this.drawComponent("image");
  
+    // Calculate and overlay source outline:
+		if(typeof Conrec === "function"){
+			var i, row, col;
+			var timage = new Array(this.lens.h);
+			for(row = 0 ; row < this.lens.h ; row++){
+				timage[row] = new Array(this.lens.w);
+				for(col = 0 ; col < this.lens.w ; col++){
+					i = row + col*this.lens.h;
+					timage[row][col] = this.lens.trueimage[i];
+				}
+			}
+      
+      var lasso = this.getContours(timage, [0.4]);
+      outline = lasso.contourList();
+      outline = this.downsample(outline);
+			this.drawContours(this.srcmodelPaper, outline, {color:'#00FF00', lw:4});
+    }
+    
     // Calculate and overlay arcs outline:
 		if(typeof Conrec === "function"){
 			var i, row, col;
@@ -438,15 +468,13 @@
 				}
 			}
       
-			var lasso = this.getContours(pimage, [0.4]);
-			outline = lasso.contourList();
+      var lasso = this.getContours(pimage, [0.4]);
+      outline = lasso.contourList();
       outline = this.downsample(outline);
-      
 			this.drawContours(this.predictionPaper, outline, {color:'#00FF00', lw:4});
     }
 
     // drawComponent("source", this.lens, c);
-
 
 	}
 	
