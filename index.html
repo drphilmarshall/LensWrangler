@@ -105,11 +105,11 @@
 	body {
 		font-family: 'Myriad Pro',Calibri,Helvetica,Arial,sans-serif;
 		background-color: black;
-		color: white;
+		color: #999999;
 	}
   
 	h1, h2, h3, h4 { font-family: 'Lucida Grande','Calibri',Helvetica,Arial,sans-serif; }
-	h1 { margin-bottom: 0.5em; }
+	h1 { margin-bottom: 0.5em; color: #FFFFFF; }
   
 	a { color: #999999; }
 	
@@ -134,13 +134,13 @@
     height:auto;
   }
   
-	#status { margin-bottom: 0.5em; }
+	#status { margin-bottom: 0.5em; height: 40px; }
 	#lenswrangler, #lenswrangler-srcmodel, #lenswrangler-prediction, .lensimg {
     width:400px; height:400px;
   }
   
 	#forkme_banner {
-		background: url("http://slowe.github.com/graph/images/blacktocat.png") no-repeat scroll 95% 50% #0090FF;
+		background: url("http://slowe.github.com/graph/images/blacktocat.png") no-repeat scroll 95% 50% #606060;
 		border-bottom-left-radius: 2px;
 		border-bottom-right-radius: 2px;
 		box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
@@ -176,11 +176,20 @@
   .absolute {
     position: absolute;
   }
+
+  .captions {
+    display: block;
+    height: 40px;
+  }
+	#masscaption, #srccaption, #predcaption { 
+    width: 400px;
+		color: #606060;
+  }
   
 	#footer {
 		position: absolute;
 		margin: 20px;
-		top: 520px;
+		top: 560px;
 	}
   
   
@@ -196,30 +205,46 @@
 		</header>
 	
 		<div id="status">Loading image...</div>
-		<br>
     
-        <div class="viewer">
+    <div class="captions">
+      <div class="inline">
+        <div id="masscaption" class="inline-block">
+        <p>Mass Model</p></div>
+      </div>
+      
+      <div class="inline">
+        <div id="srccaption" class="inline-block">
+        <p style="margin-left:5px;">Source Model</p></div>
+      </div>
+      
+      <div class="inline">
+        <div id="predcaption" class="inline-block">
+        <p style="margin-left:10px;">Prediction</p></div>
+      </div>
+    </div>
+    
+    <div class="viewer">
 
-          <!-- left panel for model -->
-          <!-- TODO: 1 pixel offset along y. STUPID. -->
-          <div class="inline">
-            <!-- background image is always absolute positions -->
-            <div id="marking-container" class="inline-block"></div>
-          </div>
+      <!-- left panel for model -->
+      <!-- TODO: 1 pixel offset along y. STUPID. -->
+      <div class="inline">
+        <!-- background image is always absolute positions -->
+        <div id="marking-container" class="inline-block"></div>
+      </div>
 
-          <div class="inline">
-            <div id="lenswrangler-srcmodel" class="absolute inline-block"></div>
-            <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
-          </div>
+      <div class="inline">
+        <div id="lenswrangler-srcmodel" class="absolute inline-block"></div>
+        <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
+      </div>
 
-          <!-- right panel for prediction -->
-          <div class="inline">
-            <!--  lenswrangler class needs to be displayed as inline-block -->
-            <div id="lenswrangler-prediction" class="absolute inline-block"></div>
-            <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
-          </div>
+      <!-- right panel for prediction -->
+      <div class="inline">
+        <!--  lenswrangler class needs to be displayed as inline-block -->
+        <div id="lenswrangler-prediction" class="absolute inline-block"></div>
+        <img class="lensimg" src="http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg" />
+      </div>
 
-        </div>
+    </div>
     
 	</div>
 
