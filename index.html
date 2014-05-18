@@ -64,12 +64,34 @@
         height: 400
       });
       ms.rescale(0, 0, width, height);
+      var scaleX = 400 / img.width;
+      var scaleY = 400 / img.height;
+      
+      function getThetaE(d) {
+        var a = d.rx * wrangler.pixscale;
+        var b = d.ry * wrangler.pixscale;
+        return Math.sqrt(a * b);
+      }
+      
+      function getCoords(d) {
+        return wrangler.lens.pix2ang({x: scaleX * d.x, y: scaleY * d.y});
+      }
       
       ms.on('marking-surface:change', function() {
-        var value = JSON.parse(ms.getValue())[0];
-        var rx = parseFloat(value.rx) * wrangler.pixscale;
-        var ry = parseFloat(value.ry) * wrangler.pixscale;
-        console.log(rx, ry);
+        
+        var data = JSON.parse(ms.getValue());
+        var components = data.map(function(d) {
+          var coords = getCoords(d);
+          
+          return {
+            plane: "lens",
+            theta_e: getThetaE(d),
+            x: coords.x,
+            y: coords.y
+          }
+        });
+        
+        wrangler.updateModel(components);
       });
       
     }
