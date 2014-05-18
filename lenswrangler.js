@@ -29,6 +29,12 @@
 		this.paper = new Canvas({ 'id': this.id });
     
     this.srcmodelPaper = new Canvas({'id': this.srcmodel});
+    this.freezeSrcModel = false;
+    var _this = this;
+    this.srcmodelPaper.canvas.onclick = function() {
+      _this.freezeSrcModel = _this.freezeSrcModel ? false: true;
+    };
+    
     this.predictionPaper = new Canvas({'id': this.prediction});
     
     // Get the canvas width and height:
@@ -79,6 +85,7 @@
     var source = this.models[0].source;
     components.splice(0, 0, source);
     this.models[0].components = components;
+    
     this.init();
   }
   
@@ -374,8 +381,12 @@
       
       this.paper.events[e[i]] = "";
       if (e[i] === "mousemove") {
+        var _this = this;
         this.srcmodelPaper.bind(e[i], { ev:ev, wrangler:this }, function(e) {
-          e.data.wrangler.update(e);
+          _this.e = {x:e.x, y:e.y};
+          if (!_this.freezeSrcModel) {
+            e.data.wrangler.update(e);
+          }
         });
       }
     }
@@ -389,14 +400,14 @@
 	}
 	
 	LensWrangler.prototype.update = function(e){
+    if (!e) { return; }
     
 		// Get the size of the existing source
 		var src = this.lens.source[0];
 
 		// Remove existing sources
 		this.lens.removeAll('source');
-	
-		if(!e) e = { x : 1000, y: 1000 }
+	  
 		// Set the lens source to the current cursor position, transforming pixel coords to angular coords:
 		var coords = this.lens.pix2ang({x:e.x, y:e.y});
     
