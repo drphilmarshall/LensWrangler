@@ -420,12 +420,30 @@
       this.drawContours(this.srcmodelPaper, caustics, {color:'#007700', lw:2});
     }
         
-		// Re-calculate the lensed image
+		// Re-calculate the lensed and true images
 		this.lens.calculateImage();
+		this.lens.calculateTrueImage();
 	
 		// Draw the lens image to the canvas
 		// this.drawComponent("image");
  
+    // Calculate and overlay source outline:
+		if(typeof Conrec === "function"){
+			var i, row, col;
+			var timage = new Array(this.lens.h);
+			for(row = 0 ; row < this.lens.h ; row++){
+				timage[row] = new Array(this.lens.w);
+				for(col = 0 ; col < this.lens.w ; col++){
+					i = row + col*this.lens.h;
+					timage[row][col] = this.lens.trueimage[i];
+				}
+			}
+      
+            var lasso = this.getContours(timage, [0.4]);
+            outline = lasso.contourList();
+            outline = this.downsample(outline);
+			this.drawContours(this.sourcePaper, outline, {color:'#00FF00', lw:4});
+        }
     // Calculate and overlay arcs outline:
 		if(typeof Conrec === "function"){
 			var i, row, col;
@@ -438,15 +456,13 @@
 				}
 			}
       
-			var lasso = this.getContours(pimage, [0.4]);
-			outline = lasso.contourList();
-      outline = this.downsample(outline);
-      
+            var lasso = this.getContours(pimage, [0.4]);
+            outline = lasso.contourList();
+            outline = this.downsample(outline);
 			this.drawContours(this.predictionPaper, outline, {color:'#00FF00', lw:4});
-    }
+        }
 
     // drawComponent("source", this.lens, c);
-
 
 	}
 	
