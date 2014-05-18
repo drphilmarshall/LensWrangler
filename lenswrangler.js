@@ -56,11 +56,17 @@
       src:" http://lenszoo.files.wordpress.com/2013/12/asw0009cjs-zoomed.jpg",
       // src: "CSWA5_15x15arcsec.jpg",
       PSFwidth: 1.2,
+      source: {
+        plane: "source",
+        size:  0.7,
+        x: 100.0,
+        y:  100.0
+      },
       components: [
+        {plane: "source", size:  0.7, x: 100.0, y:  100.0},
         {plane: "lens", theta_e: 1.8, x: -2.4, y: -0.7},
         {plane: "lens", theta_e: 1.9, x:  2.7, y:  0.2},
-        {plane: "lens", theta_e: 0.4, x: -4.6, y:  1.7},
-        {plane: "source", size:  0.7, x: 100.0, y:  100.0}
+        {plane: "lens", theta_e: 0.4, x: -4.6, y:  1.7}
       ]
 		});
 	
@@ -69,6 +75,16 @@
 	
 	}
 	
+  
+  LensWrangler.prototype.updateModel = function(components) {
+    console.log('updateModel');
+    
+    var source = this.models[0].source;
+    components.splice(0, 0, source);
+    this.models[0].components = components;
+    console.log(this.models[0].components);
+  }
+  
 	// Contour using conrec.js
 	LensWrangler.prototype.getContours = function(data,z){
 		// data should be a 2D array
@@ -386,7 +402,7 @@
 		if(!e) e = { x : 1000, y: 1000 }
 		// Set the lens source to the current cursor position, transforming pixel coords to angular coords:
 		var coords = this.lens.pix2ang({x:e.x, y:e.y});
-
+    
 		// Update the source x,y positions
 		src.x = coords.x;
 		src.y = coords.y;
