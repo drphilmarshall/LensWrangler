@@ -130,7 +130,7 @@
 		canvas.ctx.strokeStyle = color;
 		canvas.ctx.lineWidth = lw;
 		// Loop over separate contour loops, of which there are c.length:
-        for(l = 0; l < c.length ; l++){
+    for(l = 0; l < c.length ; l++){
 			canvas.ctx.beginPath();
 
 			// Move to the start of this contour:
@@ -343,21 +343,21 @@
 				var contours = this.getContours(invmag,[0.0]);
 				this.critcurve = contours.contourList();
                 
-                // Caustics:
-                this.caustics = new Array(this.critcurve.length);
-		        // Loop over separate loops of the critcurve contour, of which there are c.length:
-                var c = this.critcurve;
-                for(l = 0; l < c.length ; l++){
-                    this.caustics[l] = new Array(this.critcurve[l].length);
-			        // Loop over all the points in this contour, mapping them back to the source plane:
-			        for(k = 0; k < c[l].length ; k++) {
-                        i = this.lens.altxy2i(Math.round(c[l][k].x),Math.round(c[l][k].y));                 
-                        this.caustics[l][k] = {x: (Math.round(c[l][k].x - this.lens.alpha[i].x)),
-                                               y: (Math.round(c[l][k].y - this.lens.alpha[i].y))};
+        // Caustics:
+        this.caustics = new Array(this.critcurve.length);
+		    // Loop over separate loops of the critcurve contour, of which there are c.length:
+        var c = this.critcurve;
+        for(l = 0; l < c.length ; l++){
+          this.caustics[l] = new Array(this.critcurve[l].length);
+			    // Loop over all the points in this contour, mapping them back to the source plane:
+			    for(k = 0; k < c[l].length ; k++) {
+            i = this.lens.altxy2i(Math.round(c[l][k].x),Math.round(c[l][k].y));                 
+            this.caustics[l][k] = {x: (Math.round(c[l][k].x - this.lens.alpha[i].x)),
+                                   y: (Math.round(c[l][k].y - this.lens.alpha[i].y))};
                                                
-                        // if (l == 0) console.log(c[l][k],i, this.lens.alpha[i],this.caustics[l][k]);
-                    }    
-		        }
+            // if (l == 0) console.log(c[l][k],i, this.lens.alpha[i],this.caustics[l][k]);
+          }    
+		    }
                 
 			}
 		}
@@ -418,11 +418,11 @@
 		// Add the source back
     this.lens.add(src);
     
-		// Paste original image
-		this.paper.pasteFromClipboard();
+    // Paste original image
+    this.paper.pasteFromClipboard();
     this.predictionPaper.clear();
     
-		if (this.showcrit) {
+    if (this.showcrit) {
       this.srcmodelPaper.clear();
       var critcurve = this.downsample(this.critcurve);
       var caustics = this.downsample(this.caustics);
@@ -450,11 +450,12 @@
 				}
 			}
       
-            var lasso = this.getContours(timage, [0.4]);
-            outline = lasso.contourList();
-            outline = this.downsample(outline);
-			this.drawContours(this.sourcePaper, outline, {color:'#00FF00', lw:4});
-        }
+      var lasso = this.getContours(timage, [0.4]);
+      outline = lasso.contourList();
+      outline = this.downsample(outline);
+			this.drawContours(this.srcmodelPaper, outline, {color:'#00FF00', lw:4});
+    }
+    
     // Calculate and overlay arcs outline:
 		if(typeof Conrec === "function"){
 			var i, row, col;
@@ -467,11 +468,11 @@
 				}
 			}
       
-            var lasso = this.getContours(pimage, [0.4]);
-            outline = lasso.contourList();
-            outline = this.downsample(outline);
+      var lasso = this.getContours(pimage, [0.4]);
+      outline = lasso.contourList();
+      outline = this.downsample(outline);
 			this.drawContours(this.predictionPaper, outline, {color:'#00FF00', lw:4});
-        }
+    }
 
     // drawComponent("source", this.lens, c);
 
