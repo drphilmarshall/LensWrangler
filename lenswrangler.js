@@ -82,7 +82,7 @@
     var source = this.models[0].source;
     components.splice(0, 0, source);
     this.models[0].components = components;
-    console.log(this.models[0].components);
+    this.init();
   }
   
 	// Contour using conrec.js
@@ -297,10 +297,9 @@
 	}
 	
 	LensWrangler.prototype.init = function(inp,fnCallback){
-	
 		this.model = this.getModel(inp);
 		
-		if(typeof this.model.src === "string") this.loadImage(this.model.src);
+    if(typeof this.model.src === "string") this.loadImage(this.model.src);
 	
 		if(typeof this.model.components === "object"){
 			this.lens.removeAll('lens');
@@ -373,6 +372,11 @@
 		// Bind the callback events
 		var e = ["mousemove","mouseover","mouseout"];
 		var ev = "";
+    
+    console.log('number of events', this.srcmodelPaper.events["mousemove"].length);
+    console.log('number of events', this.predictionPaper.events["mousemove"].length);
+    console.log('number of events', this.paper.events["mousemove"].length);
+    
 		for(var i = 0; i < e.length; i++){
       
       this.paper.events[e[i]] = "";
